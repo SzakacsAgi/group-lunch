@@ -12,7 +12,7 @@ export default function RootLayout({
   return (
     <html lang='en' className='h-full'>
       <head>
-        <script async src={`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_PLACES_KEY}&libraries=places`}></script>
+        <title>Group lunch</title>
       </head>
       <body className='h-full'>
         <GraphQlProvider>

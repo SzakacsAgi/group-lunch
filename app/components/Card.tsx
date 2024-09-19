@@ -1,16 +1,10 @@
 import React from 'react'
 import { Card, CardHeader, CardBody, CardFooter, Divider, Button, Image } from '@nextui-org/react'
-/* import { useMutation } from '@apollo/client'
-import { DELETE_RESTAURANT } from '@/query/restaurant'
-import { RestaurantEntity } from '@/gql/graphql' */
+import { RestaurantEntity } from '../../gql/graphql'
 import { useRouter } from 'next/navigation'
-import { StarIcon } from '@heroicons/react/24/solid'
-import priceLevelMapper from '../utils/priceLevelMapper'
-/* import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from '@nextui-org/react'
- */
+
 interface RestaurantCardProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  restaurant: any
+  restaurant: RestaurantEntity
 }
 
 export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
@@ -29,18 +23,9 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
       </CardHeader>
       <Divider />
       <CardBody>
-        <div className='flex justify-between'>
-          <p>{restaurant.displayName.text}</p>
-          <div className='flex gap-x-1'>
-            <StarIcon className='w-5 text-yellow-300' />
-            <p>{`${restaurant.rating} (${restaurant.userRatingCount})`}</p>
-          </div>
-        </div>
-        <div>
-          <p>{restaurant.shortFormattedAddress}</p>
-          <p>{`${priceLevelMapper(restaurant.priceLevel)} - ${restaurant.primaryType}`}</p>
-          <p>{`open: ${restaurant.currentOpeningHours.openNow}`}</p>
-        </div>
+        <p>{`title: ${restaurant?.attributes?.title}`}</p>
+        <p>{`description: ${restaurant?.attributes?.description}`}</p>
+        <p>{`url: ${restaurant?.attributes?.url}`}</p>
       </CardBody>
       <Divider />
       <CardFooter className='flex gap-x-5'>

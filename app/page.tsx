@@ -2,44 +2,24 @@
 import { useEffect, useState } from 'react'
 import RestaurantCard from './components/Card'
 import CardSkeleton from './components/skeleton/CardSkeleton'
-import axios from 'axios'
+import { useRestaurantCRUD } from './api/restaurantCRUD'
 
 const App = () => {
   const [restaurants, setRestaurants] = useState([])
+  const { allRestaurant } = useRestaurantCRUD()
 
   useEffect(() => {
-    const getPlaces = async () => {
-      try {
-        const request = {
-          includedTypes: ['restaurant'],
-          maxResultCount: 2,
-          locationRestriction: {
-            circle: {
-              center: {
-                latitude: 47.527487505918934,
-                longitude: 21.625655037315173,
-              },
-              radius: 500.0,
-            },
-          },
-        }
-
-        const response = await axios.post('https://places.googleapis.com/v1/places:searchNearby', request, {
-          headers: {
-            'X-Goog-Api-Key': process.env.GOOGLE_PLACES_KEY,
-            'X-Goog-FieldMask': '*',
-          },
-        })
-        setRestaurants(response.data.places)
-      } catch (error) {
-        console.error(error)
-      }
+    if (allRestaurant.data && !allRestaurant.loading) {
+      setRestaurants(allRestaurant.data.restaurants.data)
     }
-    getPlaces()
-  }, [])
+  }, [allRestaurant.data, allRestaurant.loading])
+
+  useEffect(() => {
+    allRestaurant.refetch()
+  }, [allRestaurant])
 
   const detectContent = () => {
-    if (restaurants.length === 0) {
+    if (allRestaurant.loading) {
       return (
         <div className='grid grid-cols-3 gap-6 items-center'>
           {Array.from({ length: 6 }).map(() => (
@@ -50,9 +30,11 @@ const App = () => {
         </div>
       )
     }
-
-    if (restaurants.length === 0) {
+    if (allRestaurant.data.restaurants.data.length === 0) {
       return <div>No restaurants</div>
+    }
+    if (allRestaurant.error) {
+      return <div className='px-6'>Something went wrong, please try again later</div>
     }
 
     return (
