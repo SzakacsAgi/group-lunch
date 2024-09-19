@@ -1,36 +1,47 @@
 'use client'
-import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useQuery } from '@apollo/client'
+import { GET_RESTAURANT_BY_ID } from '../../../query/restaurant'
+import EditAddForm from '../../components/EditAddForm'
+import ModalButton from '../../components/button/ModalButton'
+import { useRestaurantCRUD } from '../../api/restaurantCRUD'
+import { SupportedModalButtonTypes } from '../../../interface'
 
 const EditRestaurant = ({ params }: { params: { slug: string } }) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [restaurantDetail, setRestaurantDetail] = useState<any>()
+  const restaurantToView = useQuery(GET_RESTAURANT_BY_ID, { variables: { id: params.slug } })
+  const { sendUpdateRestaurantRequest, sendDeleteRestaurantRequest } = useRestaurantCRUD()
 
-  useEffect(() => {
-    const getRestaurantDetail = async () => {
-      try {
-        const detail = await axios.get(`https://places.googleapis.com/v1/places/${params.slug}?key=${process.env.GOOGLE_PLACES_KEY}`, {
-          headers: {
-            'X-Goog-FieldMask': 'displayName',
-          },
-        })
-        setRestaurantDetail(detail.data)
-      } catch (error) {
-        console.error(error)
-        setRestaurantDetail('error')
-      }
-    }
-    getRestaurantDetail()
-  }, [params.slug])
-
-  if (!restaurantDetail) {
+  if (restaurantToView.loading) {
     return <div>Loading...</div>
   }
-  if (restaurantDetail === 'error') {
+  if (restaurantToView.error) {
     return <div className='px-6'>Something went wrong, please try again later</div>
   }
+  if (!restaurantToView.data.restaurant.data) {
+    return <div className='px-6'>No such restaurant</div>
+  }
 
-  return <div>{restaurantDetail.displayName.text}</div>
+  return (
+    <div>
+      <p>{`title: ${restaurantToView.data.restaurant.data.attributes.title}`}</p>
+      <p>{`description: ${restaurantToView.data.restaurant.data.attributes.description}`}</p>
+      <p>{`url: ${restaurantToView.data.restaurant.data.attributes.url}`}</p>
+      <ModalButton
+        buttonPurpose={SupportedModalButtonTypes.EDIT_RESTAURANT}
+        buttonText='Edit'
+        modalContent={<EditAddForm onSubmit={sendUpdateRestaurantRequest} restaurant={restaurantToView.data.restaurant.data} />}
+        modalHeaderText='Edit'
+      />
+      <ModalButton
+        buttonPurpose={SupportedModalButtonTypes.DELETE_RESTAURANT}
+        buttonText='Delete'
+        modalContent={<p>Are you sure you want to delete this restaurant?</p>}
+        withButtons
+        onSubmit={() => sendDeleteRestaurantRequest(restaurantToView.data.restaurant.data.id)}
+        cancelText='Cancel'
+        submitText='Delete'
+      />
+    </div>
+  )
 }
 
 export default EditRestaurant

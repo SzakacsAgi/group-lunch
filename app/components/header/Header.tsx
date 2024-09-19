@@ -1,21 +1,26 @@
 'use client'
 import React, { useState } from 'react'
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, Button } from '@nextui-org/react'
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Button, Link } from '@nextui-org/react'
 import clsx from 'clsx'
 import { link as linkStyles } from '@nextui-org/theme'
 import { ArrowLeftStartOnRectangleIcon } from '@heroicons/react/24/solid'
+import NextLink from 'next/link'
+import { useUser } from '@auth0/nextjs-auth0/client'
+import Image from 'next/image'
+import EditAddForm from '../EditAddForm'
+import ModalButton from '../button/ModalButton'
+import { useRestaurantCRUD } from '../../api/restaurantCRUD'
+import { SupportedModalButtonTypes } from '../../../interface'
 
 export const menuItems = [
   { label: 'Home', href: '/' },
   { label: 'Vote', href: '#' },
 ]
-import NextLink from 'next/link'
-import { useUser } from '@auth0/nextjs-auth0/client'
-import Image from 'next/image'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const user = useUser()
+  const { sendCreateRestaurantRequest } = useRestaurantCRUD()
 
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen}>
@@ -29,11 +34,19 @@ const Header = () => {
       <NavbarContent className='hidden sm:flex gap-4' justify='center'>
         {menuItems.map((item) => (
           <NavbarItem key={item.href}>
-            <NextLink className={clsx(linkStyles({ color: 'foreground' }), 'data-[active=true]:text-primary data-[active=true]:font-medium')} href='/'>
+            <NextLink className={clsx(linkStyles({ color: 'foreground' }), 'data-[active=true]:text-primary data-[active=true]:font-medium')} href={item.href}>
               {item.label}
             </NextLink>
           </NavbarItem>
         ))}
+        <NavbarItem>
+          <ModalButton
+            buttonPurpose={SupportedModalButtonTypes.CREATE_RESTAURANT}
+            buttonText='Create'
+            modalContent={<EditAddForm onSubmit={sendCreateRestaurantRequest} />}
+            modalHeaderText='Create new'
+          />
+        </NavbarItem>
       </NavbarContent>
       <NavbarContent justify='end'>
         {!user.isLoading && (

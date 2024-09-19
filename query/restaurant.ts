@@ -16,8 +16,8 @@ export const CREATE_RESTAURANT = gql`
 `
 
 export const UPDATE_RESTAURANT = gql`
-  mutation updateRestaurant($id: ID!, $title: String) {
-    updateRestaurant(id: $id, data: { title: $title }) {
+  mutation updateRestaurant($id: ID!, $title: String, $description: String, $url: String) {
+    updateRestaurant(id: $id, data: { title: $title, description: $description, url: $url }) {
       data {
         id
         attributes {
@@ -64,6 +64,7 @@ export const GET_RESTAURANT_BY_ID = gql`
   query getRestaurantById($id: ID!) {
     restaurant(id: $id) {
       data {
+        id
         attributes {
           title
           description

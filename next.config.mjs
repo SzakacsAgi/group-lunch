@@ -9,12 +9,13 @@ const nextConfig = {
           {
             protocol: 'https',
             hostname: "platform-lookaside.fbsbx.com"
+          },
+          {
+            protocol: 'https',
+            hostname: "s.gravatar.com"
           }
         ],
       },
-      env: {
-        GOOGLE_PLACES_KEY: process.env.GOOGLE_PLACES_KEY,
-      }
 };
 
 export default nextConfig;
