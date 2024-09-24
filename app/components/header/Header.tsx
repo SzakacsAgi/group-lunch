@@ -1,12 +1,11 @@
 'use client'
 import React, { useState } from 'react'
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Button, Link } from '@nextui-org/react'
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Button, Link, Avatar } from '@nextui-org/react'
 import clsx from 'clsx'
 import { link as linkStyles } from '@nextui-org/theme'
 import { ArrowLeftStartOnRectangleIcon } from '@heroicons/react/24/solid'
 import NextLink from 'next/link'
 import { useUser } from '@auth0/nextjs-auth0/client'
-import Image from 'next/image'
 import EditAddForm from '../EditAddForm'
 import ModalButton from '../button/ModalButton'
 import { useRestaurantCRUD } from '../../api/restaurantCRUD'
@@ -53,10 +52,8 @@ const Header = () => {
           <NavbarItem>
             {user.user ? (
               <div className='flex items-center'>
-                {user.user.picture && (
-                  <Image src={user.user.picture} alt='A picture about the user' width={100} height={100} className='w-8 rounded-full mr-2' />
-                )}
-                <p className='mr-2'>{user.user.name}</p>
+                {user.user.picture && <Avatar name={user.user?.name?.toString()} src={user.user?.picture} />}
+                <p className='mr-2 ml-2'>{user.user.name}</p>
                 <Link href='/api/auth/logout' aria-current='page'>
                   <ArrowLeftStartOnRectangleIcon className='w-5 rotate-180 text-red-500 cursor-pointer' />
                 </Link>
