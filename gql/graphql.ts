@@ -22,6 +22,56 @@ export type Scalars = {
   Upload: { input: any; output: any }
 }
 
+export type AppUser = {
+  __typename?: 'AppUser'
+  createdAt?: Maybe<Scalars['DateTime']['output']>
+  email?: Maybe<Scalars['String']['output']>
+  imageUrl?: Maybe<Scalars['String']['output']>
+  publishedAt?: Maybe<Scalars['DateTime']['output']>
+  updatedAt?: Maybe<Scalars['DateTime']['output']>
+  userId?: Maybe<Scalars['String']['output']>
+  userName?: Maybe<Scalars['String']['output']>
+}
+
+export type AppUserEntity = {
+  __typename?: 'AppUserEntity'
+  attributes?: Maybe<AppUser>
+  id?: Maybe<Scalars['ID']['output']>
+}
+
+export type AppUserEntityResponse = {
+  __typename?: 'AppUserEntityResponse'
+  data?: Maybe<AppUserEntity>
+}
+
+export type AppUserEntityResponseCollection = {
+  __typename?: 'AppUserEntityResponseCollection'
+  data: Array<AppUserEntity>
+  meta: ResponseCollectionMeta
+}
+
+export type AppUserFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<AppUserFiltersInput>>>
+  createdAt?: InputMaybe<DateTimeFilterInput>
+  email?: InputMaybe<StringFilterInput>
+  id?: InputMaybe<IdFilterInput>
+  imageUrl?: InputMaybe<StringFilterInput>
+  not?: InputMaybe<AppUserFiltersInput>
+  or?: InputMaybe<Array<InputMaybe<AppUserFiltersInput>>>
+  publishedAt?: InputMaybe<DateTimeFilterInput>
+  updatedAt?: InputMaybe<DateTimeFilterInput>
+  userId?: InputMaybe<StringFilterInput>
+  userName?: InputMaybe<StringFilterInput>
+}
+
+export type AppUserInput = {
+  email?: InputMaybe<Scalars['String']['input']>
+  imageUrl?: InputMaybe<Scalars['String']['input']>
+  publishedAt?: InputMaybe<Scalars['DateTime']['input']>
+  userId?: InputMaybe<Scalars['String']['input']>
+  userName?: InputMaybe<Scalars['String']['input']>
+}
+
 export type BooleanFilterInput = {
   and?: InputMaybe<Array<InputMaybe<Scalars['Boolean']['input']>>>
   between?: InputMaybe<Array<InputMaybe<Scalars['Boolean']['input']>>>
@@ -128,6 +178,7 @@ export type GeneralInput = {
 }
 
 export type GenericMorph =
+  | AppUser
   | General
   | I18NLocale
   | Restaurant
@@ -136,6 +187,7 @@ export type GenericMorph =
   | UsersPermissionsPermission
   | UsersPermissionsRole
   | UsersPermissionsUser
+  | Vote
 
 export type I18NLocale = {
   __typename?: 'I18NLocale'
@@ -252,6 +304,7 @@ export type Mutation = {
   __typename?: 'Mutation'
   /** Change user password. Confirm with the current password. */
   changePassword?: Maybe<UsersPermissionsLoginPayload>
+  createAppUser?: Maybe<AppUserEntityResponse>
   createRestaurant?: Maybe<RestaurantEntityResponse>
   createUploadFile?: Maybe<UploadFileEntityResponse>
   createUploadFolder?: Maybe<UploadFolderEntityResponse>
@@ -259,6 +312,8 @@ export type Mutation = {
   createUsersPermissionsRole?: Maybe<UsersPermissionsCreateRolePayload>
   /** Create a new user */
   createUsersPermissionsUser: UsersPermissionsUserEntityResponse
+  createVote?: Maybe<VoteEntityResponse>
+  deleteAppUser?: Maybe<AppUserEntityResponse>
   deleteGeneral?: Maybe<GeneralEntityResponse>
   deleteRestaurant?: Maybe<RestaurantEntityResponse>
   deleteUploadFile?: Maybe<UploadFileEntityResponse>
@@ -267,6 +322,7 @@ export type Mutation = {
   deleteUsersPermissionsRole?: Maybe<UsersPermissionsDeleteRolePayload>
   /** Delete an existing user */
   deleteUsersPermissionsUser: UsersPermissionsUserEntityResponse
+  deleteVote?: Maybe<VoteEntityResponse>
   /** Confirm an email users email address */
   emailConfirmation?: Maybe<UsersPermissionsLoginPayload>
   /** Request a reset password token */
@@ -278,6 +334,7 @@ export type Mutation = {
   removeFile?: Maybe<UploadFileEntityResponse>
   /** Reset user password. Confirm with a code (resetToken from forgotPassword) */
   resetPassword?: Maybe<UsersPermissionsLoginPayload>
+  updateAppUser?: Maybe<AppUserEntityResponse>
   updateFileInfo: UploadFileEntityResponse
   updateGeneral?: Maybe<GeneralEntityResponse>
   updateRestaurant?: Maybe<RestaurantEntityResponse>
@@ -287,6 +344,7 @@ export type Mutation = {
   updateUsersPermissionsRole?: Maybe<UsersPermissionsUpdateRolePayload>
   /** Update an existing user */
   updateUsersPermissionsUser: UsersPermissionsUserEntityResponse
+  updateVote?: Maybe<VoteEntityResponse>
   upload: UploadFileEntityResponse
 }
 
@@ -294,6 +352,10 @@ export type MutationChangePasswordArgs = {
   currentPassword: Scalars['String']['input']
   password: Scalars['String']['input']
   passwordConfirmation: Scalars['String']['input']
+}
+
+export type MutationCreateAppUserArgs = {
+  data: AppUserInput
 }
 
 export type MutationCreateRestaurantArgs = {
@@ -316,6 +378,14 @@ export type MutationCreateUsersPermissionsUserArgs = {
   data: UsersPermissionsUserInput
 }
 
+export type MutationCreateVoteArgs = {
+  data: VoteInput
+}
+
+export type MutationDeleteAppUserArgs = {
+  id: Scalars['ID']['input']
+}
+
 export type MutationDeleteRestaurantArgs = {
   id: Scalars['ID']['input']
 }
@@ -333,6 +403,10 @@ export type MutationDeleteUsersPermissionsRoleArgs = {
 }
 
 export type MutationDeleteUsersPermissionsUserArgs = {
+  id: Scalars['ID']['input']
+}
+
+export type MutationDeleteVoteArgs = {
   id: Scalars['ID']['input']
 }
 
@@ -369,6 +443,11 @@ export type MutationResetPasswordArgs = {
   passwordConfirmation: Scalars['String']['input']
 }
 
+export type MutationUpdateAppUserArgs = {
+  data: AppUserInput
+  id: Scalars['ID']['input']
+}
+
 export type MutationUpdateFileInfoArgs = {
   id: Scalars['ID']['input']
   info?: InputMaybe<FileInfoInput>
@@ -403,6 +482,11 @@ export type MutationUpdateUsersPermissionsUserArgs = {
   id: Scalars['ID']['input']
 }
 
+export type MutationUpdateVoteArgs = {
+  data: VoteInput
+  id: Scalars['ID']['input']
+}
+
 export type MutationUploadArgs = {
   field?: InputMaybe<Scalars['String']['input']>
   file: Scalars['Upload']['input']
@@ -433,6 +517,8 @@ export enum PublicationState {
 
 export type Query = {
   __typename?: 'Query'
+  appUser?: Maybe<AppUserEntityResponse>
+  appUsers?: Maybe<AppUserEntityResponseCollection>
   general?: Maybe<GeneralEntityResponse>
   i18NLocale?: Maybe<I18NLocaleEntityResponse>
   i18NLocales?: Maybe<I18NLocaleEntityResponseCollection>
@@ -447,6 +533,19 @@ export type Query = {
   usersPermissionsRoles?: Maybe<UsersPermissionsRoleEntityResponseCollection>
   usersPermissionsUser?: Maybe<UsersPermissionsUserEntityResponse>
   usersPermissionsUsers?: Maybe<UsersPermissionsUserEntityResponseCollection>
+  vote?: Maybe<VoteEntityResponse>
+  votes?: Maybe<VoteEntityResponseCollection>
+}
+
+export type QueryAppUserArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>
+}
+
+export type QueryAppUsersArgs = {
+  filters?: InputMaybe<AppUserFiltersInput>
+  pagination?: InputMaybe<PaginationArg>
+  publicationState?: InputMaybe<PublicationState>
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
 }
 
 export type QueryGeneralArgs = {
@@ -511,6 +610,17 @@ export type QueryUsersPermissionsUserArgs = {
 export type QueryUsersPermissionsUsersArgs = {
   filters?: InputMaybe<UsersPermissionsUserFiltersInput>
   pagination?: InputMaybe<PaginationArg>
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
+}
+
+export type QueryVoteArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>
+}
+
+export type QueryVotesArgs = {
+  filters?: InputMaybe<VoteFiltersInput>
+  pagination?: InputMaybe<PaginationArg>
+  publicationState?: InputMaybe<PublicationState>
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>
 }
 
@@ -902,6 +1012,9 @@ export type UsersPermissionsUser = {
   confirmed?: Maybe<Scalars['Boolean']['output']>
   createdAt?: Maybe<Scalars['DateTime']['output']>
   email: Scalars['String']['output']
+  firstName?: Maybe<Scalars['String']['output']>
+  imageUrl?: Maybe<Scalars['String']['output']>
+  lastName?: Maybe<Scalars['String']['output']>
   provider?: Maybe<Scalars['String']['output']>
   role?: Maybe<UsersPermissionsRoleEntityResponse>
   updatedAt?: Maybe<Scalars['DateTime']['output']>
@@ -932,7 +1045,10 @@ export type UsersPermissionsUserFiltersInput = {
   confirmed?: InputMaybe<BooleanFilterInput>
   createdAt?: InputMaybe<DateTimeFilterInput>
   email?: InputMaybe<StringFilterInput>
+  firstName?: InputMaybe<StringFilterInput>
   id?: InputMaybe<IdFilterInput>
+  imageUrl?: InputMaybe<StringFilterInput>
+  lastName?: InputMaybe<StringFilterInput>
   not?: InputMaybe<UsersPermissionsUserFiltersInput>
   or?: InputMaybe<Array<InputMaybe<UsersPermissionsUserFiltersInput>>>
   password?: InputMaybe<StringFilterInput>
@@ -948,6 +1064,9 @@ export type UsersPermissionsUserInput = {
   confirmationToken?: InputMaybe<Scalars['String']['input']>
   confirmed?: InputMaybe<Scalars['Boolean']['input']>
   email?: InputMaybe<Scalars['String']['input']>
+  firstName?: InputMaybe<Scalars['String']['input']>
+  imageUrl?: InputMaybe<Scalars['String']['input']>
+  lastName?: InputMaybe<Scalars['String']['input']>
   password?: InputMaybe<Scalars['String']['input']>
   provider?: InputMaybe<Scalars['String']['input']>
   resetPasswordToken?: InputMaybe<Scalars['String']['input']>
@@ -958,6 +1077,50 @@ export type UsersPermissionsUserInput = {
 export type UsersPermissionsUserRelationResponseCollection = {
   __typename?: 'UsersPermissionsUserRelationResponseCollection'
   data: Array<UsersPermissionsUserEntity>
+}
+
+export type Vote = {
+  __typename?: 'Vote'
+  createdAt?: Maybe<Scalars['DateTime']['output']>
+  publishedAt?: Maybe<Scalars['DateTime']['output']>
+  restaurantId?: Maybe<Scalars['String']['output']>
+  updatedAt?: Maybe<Scalars['DateTime']['output']>
+  userId: Scalars['String']['output']
+}
+
+export type VoteEntity = {
+  __typename?: 'VoteEntity'
+  attributes?: Maybe<Vote>
+  id?: Maybe<Scalars['ID']['output']>
+}
+
+export type VoteEntityResponse = {
+  __typename?: 'VoteEntityResponse'
+  data?: Maybe<VoteEntity>
+}
+
+export type VoteEntityResponseCollection = {
+  __typename?: 'VoteEntityResponseCollection'
+  data: Array<VoteEntity>
+  meta: ResponseCollectionMeta
+}
+
+export type VoteFiltersInput = {
+  and?: InputMaybe<Array<InputMaybe<VoteFiltersInput>>>
+  createdAt?: InputMaybe<DateTimeFilterInput>
+  id?: InputMaybe<IdFilterInput>
+  not?: InputMaybe<VoteFiltersInput>
+  or?: InputMaybe<Array<InputMaybe<VoteFiltersInput>>>
+  publishedAt?: InputMaybe<DateTimeFilterInput>
+  restaurantId?: InputMaybe<StringFilterInput>
+  updatedAt?: InputMaybe<DateTimeFilterInput>
+  userId?: InputMaybe<StringFilterInput>
+}
+
+export type VoteInput = {
+  publishedAt?: InputMaybe<Scalars['DateTime']['input']>
+  restaurantId?: InputMaybe<Scalars['String']['input']>
+  userId?: InputMaybe<Scalars['String']['input']>
 }
 
 export type GetGeneralQueryVariables = Exact<{ [key: string]: never }>
@@ -991,6 +1154,8 @@ export type CreateRestaurantMutation = {
 export type UpdateRestaurantMutationVariables = Exact<{
   id: Scalars['ID']['input']
   title?: InputMaybe<Scalars['String']['input']>
+  description?: InputMaybe<Scalars['String']['input']>
+  url?: InputMaybe<Scalars['String']['input']>
 }>
 
 export type UpdateRestaurantMutation = {
@@ -1045,8 +1210,103 @@ export type GetRestaurantByIdQuery = {
     __typename?: 'RestaurantEntityResponse'
     data?: {
       __typename?: 'RestaurantEntity'
+      id?: string | null
       attributes?: { __typename?: 'Restaurant'; title?: string | null; description?: string | null; url?: string | null } | null
     } | null
+  } | null
+}
+
+export type CreateAppUserMutationVariables = Exact<{
+  userId: Scalars['String']['input']
+  email?: InputMaybe<Scalars['String']['input']>
+  userName?: InputMaybe<Scalars['String']['input']>
+  imageUrl?: InputMaybe<Scalars['String']['input']>
+}>
+
+export type CreateAppUserMutation = {
+  __typename?: 'Mutation'
+  createAppUser?: {
+    __typename?: 'AppUserEntityResponse'
+    data?: {
+      __typename?: 'AppUserEntity'
+      id?: string | null
+      attributes?: { __typename?: 'AppUser'; email?: string | null; imageUrl?: string | null; userId?: string | null; userName?: string | null } | null
+    } | null
+  } | null
+}
+
+export type GetAppUsersQueryVariables = Exact<{
+  userId: Scalars['String']['input']
+}>
+
+export type GetAppUsersQuery = {
+  __typename?: 'Query'
+  appUsers?: {
+    __typename?: 'AppUserEntityResponseCollection'
+    data: Array<{
+      __typename?: 'AppUserEntity'
+      id?: string | null
+      attributes?: { __typename?: 'AppUser'; email?: string | null; userName?: string | null; imageUrl?: string | null; userId?: string | null } | null
+    }>
+  } | null
+}
+
+export type CreateVoteMutationVariables = Exact<{
+  userId: Scalars['String']['input']
+  restaurantId: Scalars['String']['input']
+}>
+
+export type CreateVoteMutation = {
+  __typename?: 'Mutation'
+  createVote?: {
+    __typename?: 'VoteEntityResponse'
+    data?: { __typename?: 'VoteEntity'; id?: string | null; attributes?: { __typename?: 'Vote'; userId: string; restaurantId?: string | null } | null } | null
+  } | null
+}
+
+export type GetVotesQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetVotesQuery = {
+  __typename?: 'Query'
+  votes?: {
+    __typename?: 'VoteEntityResponseCollection'
+    data: Array<{ __typename?: 'VoteEntity'; id?: string | null; attributes?: { __typename?: 'Vote'; userId: string; restaurantId?: string | null } | null }>
+  } | null
+}
+
+export type GetRestaurantVoteQueryVariables = Exact<{
+  restaurantId: Scalars['String']['input']
+}>
+
+export type GetRestaurantVoteQuery = {
+  __typename?: 'Query'
+  votes?: {
+    __typename?: 'VoteEntityResponseCollection'
+    data: Array<{ __typename?: 'VoteEntity'; id?: string | null; attributes?: { __typename?: 'Vote'; userId: string; restaurantId?: string | null } | null }>
+  } | null
+}
+
+export type DeleteVoteMutationVariables = Exact<{
+  id: Scalars['ID']['input']
+}>
+
+export type DeleteVoteMutation = {
+  __typename?: 'Mutation'
+  deleteVote?: {
+    __typename?: 'VoteEntityResponse'
+    data?: { __typename?: 'VoteEntity'; id?: string | null; attributes?: { __typename?: 'Vote'; userId: string; restaurantId?: string | null } | null } | null
+  } | null
+}
+
+export type GetTodaysVotesQueryVariables = Exact<{
+  restaurantId: Scalars['String']['input']
+}>
+
+export type GetTodaysVotesQuery = {
+  __typename?: 'Query'
+  votes?: {
+    __typename?: 'VoteEntityResponseCollection'
+    data: Array<{ __typename?: 'VoteEntity'; id?: string | null; attributes?: { __typename?: 'Vote'; userId: string; restaurantId?: string | null } | null }>
   } | null
 }
 
@@ -1188,6 +1448,16 @@ export const UpdateRestaurantDocument = {
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'title' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'description' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'url' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -1204,6 +1474,12 @@ export const UpdateRestaurantDocument = {
                   kind: 'ObjectValue',
                   fields: [
                     { kind: 'ObjectField', name: { kind: 'Name', value: 'title' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'title' } } },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'description' },
+                      value: { kind: 'Variable', name: { kind: 'Name', value: 'description' } },
+                    },
+                    { kind: 'ObjectField', name: { kind: 'Name', value: 'url' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'url' } } },
                   ],
                 },
               },
@@ -1371,6 +1647,7 @@ export const GetRestaurantByIdDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'attributes' },
@@ -1394,3 +1671,503 @@ export const GetRestaurantByIdDocument = {
     },
   ],
 } as unknown as DocumentNode<GetRestaurantByIdQuery, GetRestaurantByIdQueryVariables>
+export const CreateAppUserDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'createAppUser' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'email' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'userName' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'imageUrl' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createAppUser' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'data' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    { kind: 'ObjectField', name: { kind: 'Name', value: 'userId' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } } },
+                    { kind: 'ObjectField', name: { kind: 'Name', value: 'email' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'email' } } },
+                    { kind: 'ObjectField', name: { kind: 'Name', value: 'userName' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'userName' } } },
+                    { kind: 'ObjectField', name: { kind: 'Name', value: 'imageUrl' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'imageUrl' } } },
+                    { kind: 'ObjectField', name: { kind: 'Name', value: 'publishedAt' }, value: { kind: 'StringValue', value: '', block: false } },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'data' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'attributes' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'imageUrl' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'userId' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'userName' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateAppUserMutation, CreateAppUserMutationVariables>
+export const GetAppUsersDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'getAppUsers' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'appUsers' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filters' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'userId' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          { kind: 'ObjectField', name: { kind: 'Name', value: 'eq' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } } },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'data' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'attributes' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'userName' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'imageUrl' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'userId' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetAppUsersQuery, GetAppUsersQueryVariables>
+export const CreateVoteDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'createVote' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'restaurantId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createVote' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'data' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    { kind: 'ObjectField', name: { kind: 'Name', value: 'userId' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'userId' } } },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'restaurantId' },
+                      value: { kind: 'Variable', name: { kind: 'Name', value: 'restaurantId' } },
+                    },
+                    { kind: 'ObjectField', name: { kind: 'Name', value: 'publishedAt' }, value: { kind: 'StringValue', value: '', block: false } },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'data' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'attributes' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'userId' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'restaurantId' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateVoteMutation, CreateVoteMutationVariables>
+export const GetVotesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'getVotes' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'votes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'data' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'attributes' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'userId' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'restaurantId' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetVotesQuery, GetVotesQueryVariables>
+export const GetRestaurantVoteDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'getRestaurantVote' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'restaurantId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'votes' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filters' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'restaurantId' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'eq' },
+                            value: { kind: 'Variable', name: { kind: 'Name', value: 'restaurantId' } },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              { kind: 'Argument', name: { kind: 'Name', value: 'sort' }, value: { kind: 'StringValue', value: 'createdAt:desc', block: false } },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'data' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'attributes' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'userId' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'restaurantId' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetRestaurantVoteQuery, GetRestaurantVoteQueryVariables>
+export const DeleteVoteDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'deleteVote' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'deleteVote' },
+            arguments: [{ kind: 'Argument', name: { kind: 'Name', value: 'id' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'id' } } }],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'data' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'attributes' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'userId' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'restaurantId' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DeleteVoteMutation, DeleteVoteMutationVariables>
+export const GetTodaysVotesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'getTodaysVotes' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'restaurantId' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'votes' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filters' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'createdAt' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          { kind: 'ObjectField', name: { kind: 'Name', value: 'gte' }, value: { kind: 'StringValue', value: '', block: false } },
+                          { kind: 'ObjectField', name: { kind: 'Name', value: 'lte' }, value: { kind: 'StringValue', value: '', block: false } },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'restaurantId' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'eq' },
+                            value: { kind: 'Variable', name: { kind: 'Name', value: 'restaurantId' } },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              { kind: 'Argument', name: { kind: 'Name', value: 'sort' }, value: { kind: 'StringValue', value: 'createdAt:desc', block: false } },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'data' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'attributes' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'userId' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'restaurantId' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetTodaysVotesQuery, GetTodaysVotesQueryVariables>
