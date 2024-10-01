@@ -7,7 +7,7 @@ import { useRestaurantCRUD } from '../../api/restaurantCRUD'
 import { SupportedModalButtonTypes } from '../../../interface'
 
 const EditRestaurant = ({ params }: { params: { slug: string } }) => {
-  const restaurantToView = useQuery(GET_RESTAURANT_BY_ID, { variables: { id: params.slug } })
+  const restaurantToView = useQuery(GET_RESTAURANT_BY_ID, { variables: { restaurantId: params.slug } })
   const { sendUpdateRestaurantRequest, sendDeleteRestaurantRequest } = useRestaurantCRUD()
 
   if (restaurantToView.loading) {

@@ -61,8 +61,8 @@ export const DELETE_RESTAURANT = gql`
 `
 
 export const GET_RESTAURANT_BY_ID = gql`
-  query getRestaurantById($id: ID!) {
-    restaurant(id: $id) {
+  query getRestaurantById($restaurantId: ID!) {
+    restaurant(id: $restaurantId) {
       data {
         id
         attributes {

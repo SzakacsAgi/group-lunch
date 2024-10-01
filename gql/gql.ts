@@ -26,18 +26,8 @@ const documents = {
     types.GetRestaurantByIdDocument,
   '\n    mutation createAppUser($userId: String!, $email: String, $userName:String $imageUrl: String){\n        createAppUser(data:{userId: $userId, email:$email, userName:$userName, imageUrl: $imageUrl, publishedAt: ""}){\n            data{\n                id\n                attributes{\n                    email\n                    imageUrl\n                    userId\n                    userName\n                }\n            }\n        }\n    } \n':
     types.CreateAppUserDocument,
-  '\n    query getAppUsers($userId: String!){\n        appUsers(filters: { userId: { eq: $userId }}){\n            data{\n                id\n                attributes{\n                    email\n                    userName\n                    imageUrl\n                    userId\n                }\n            }\n        }\n    } \n':
+  '\n  query getAppUsers($userId: String!) {\n    appUsers(filters: { userId: { eq: $userId } }) {\n      data {\n        id\n        attributes {\n          email\n          userName\n          imageUrl\n          userId\n        }\n      }\n    }\n  }\n':
     types.GetAppUsersDocument,
-  '\n  mutation createVote($userId: String!, $restaurantId: String!){\n    createVote(data:{userId:$userId, restaurantId: $restaurantId, publishedAt: ""}){\n      data{\n        id\n        attributes{\n          userId\n          restaurantId\n        }\n      }\n    }\n  } \n':
-    types.CreateVoteDocument,
-  '\n  query getVotes {\n    votes {\n      data {\n        id\n        attributes {\n          userId\n          restaurantId\n        }\n      }\n    }\n  }\n':
-    types.GetVotesDocument,
-  '  \n  query getRestaurantVote($restaurantId: String!) {\n    votes(filters: { restaurantId: { eq: $restaurantId }}, sort: "createdAt:desc") {\n      data{\n        id\n        attributes {\n          userId\n          restaurantId\n        }\n      }\n    }\n  }\n':
-    types.GetRestaurantVoteDocument,
-  '\n  mutation deleteVote($id: ID!) {\n    deleteVote(id: $id) {\n      data {\n        id\n        attributes {\n          userId\n          restaurantId\n        }\n      }\n    }\n  }\n':
-    types.DeleteVoteDocument,
-  '  \n  query getTodaysVotes($restaurantId: String!) {\n    votes(filters: { \n      createdAt: { \n        gte: "", \n        lte: "" \n      },\n        restaurantId: { eq: $restaurantId }\n    }, sort: "createdAt:desc") {\n      data{\n        id\n        attributes {\n          userId\n          restaurantId\n        }\n      }\n    }\n  }\n':
-    types.GetTodaysVotesDocument,
 }
 
 /**
@@ -100,38 +90,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n    query getAppUsers($userId: String!){\n        appUsers(filters: { userId: { eq: $userId }}){\n            data{\n                id\n                attributes{\n                    email\n                    userName\n                    imageUrl\n                    userId\n                }\n            }\n        }\n    } \n'
-): typeof documents['\n    query getAppUsers($userId: String!){\n        appUsers(filters: { userId: { eq: $userId }}){\n            data{\n                id\n                attributes{\n                    email\n                    userName\n                    imageUrl\n                    userId\n                }\n            }\n        }\n    } \n']
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: '\n  mutation createVote($userId: String!, $restaurantId: String!){\n    createVote(data:{userId:$userId, restaurantId: $restaurantId, publishedAt: ""}){\n      data{\n        id\n        attributes{\n          userId\n          restaurantId\n        }\n      }\n    }\n  } \n'
-): typeof documents['\n  mutation createVote($userId: String!, $restaurantId: String!){\n    createVote(data:{userId:$userId, restaurantId: $restaurantId, publishedAt: ""}){\n      data{\n        id\n        attributes{\n          userId\n          restaurantId\n        }\n      }\n    }\n  } \n']
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: '\n  query getVotes {\n    votes {\n      data {\n        id\n        attributes {\n          userId\n          restaurantId\n        }\n      }\n    }\n  }\n'
-): typeof documents['\n  query getVotes {\n    votes {\n      data {\n        id\n        attributes {\n          userId\n          restaurantId\n        }\n      }\n    }\n  }\n']
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: '  \n  query getRestaurantVote($restaurantId: String!) {\n    votes(filters: { restaurantId: { eq: $restaurantId }}, sort: "createdAt:desc") {\n      data{\n        id\n        attributes {\n          userId\n          restaurantId\n        }\n      }\n    }\n  }\n'
-): typeof documents['  \n  query getRestaurantVote($restaurantId: String!) {\n    votes(filters: { restaurantId: { eq: $restaurantId }}, sort: "createdAt:desc") {\n      data{\n        id\n        attributes {\n          userId\n          restaurantId\n        }\n      }\n    }\n  }\n']
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: '\n  mutation deleteVote($id: ID!) {\n    deleteVote(id: $id) {\n      data {\n        id\n        attributes {\n          userId\n          restaurantId\n        }\n      }\n    }\n  }\n'
-): typeof documents['\n  mutation deleteVote($id: ID!) {\n    deleteVote(id: $id) {\n      data {\n        id\n        attributes {\n          userId\n          restaurantId\n        }\n      }\n    }\n  }\n']
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: '  \n  query getTodaysVotes($restaurantId: String!) {\n    votes(filters: { \n      createdAt: { \n        gte: "", \n        lte: "" \n      },\n        restaurantId: { eq: $restaurantId }\n    }, sort: "createdAt:desc") {\n      data{\n        id\n        attributes {\n          userId\n          restaurantId\n        }\n      }\n    }\n  }\n'
-): typeof documents['  \n  query getTodaysVotes($restaurantId: String!) {\n    votes(filters: { \n      createdAt: { \n        gte: "", \n        lte: "" \n      },\n        restaurantId: { eq: $restaurantId }\n    }, sort: "createdAt:desc") {\n      data{\n        id\n        attributes {\n          userId\n          restaurantId\n        }\n      }\n    }\n  }\n']
+  source: '\n  query getAppUsers($userId: String!) {\n    appUsers(filters: { userId: { eq: $userId } }) {\n      data {\n        id\n        attributes {\n          email\n          userName\n          imageUrl\n          userId\n        }\n      }\n    }\n  }\n'
+): typeof documents['\n  query getAppUsers($userId: String!) {\n    appUsers(filters: { userId: { eq: $userId } }) {\n      data {\n        id\n        attributes {\n          email\n          userName\n          imageUrl\n          userId\n        }\n      }\n    }\n  }\n']
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {}

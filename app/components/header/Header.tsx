@@ -13,7 +13,7 @@ import { SupportedModalButtonTypes } from '../../../interface'
 
 export const menuItems = [
   { label: 'Home', href: '/' },
-  { label: 'Vote', href: '#' },
+  { label: 'Vote', href: '/vote' },
 ]
 
 const Header = () => {

@@ -79,3 +79,50 @@ export const GET_TODAYS_VOTES = gql`
     }
   }
 `
+
+export const GET_VOTES_NUMBER_FOR_RESTAURANT = gql`
+  query getVotesNumberForRestaurant($restaurantId: String!) {
+    votes {
+      meta {
+        pagination {
+          total
+        }
+      }
+    }
+  }
+`
+export const GET_ALL_TODAYS_VOTES = gql`
+query getAllTodaysVotes($numberOfTodaysVotes: Int!) {
+  votes(
+    pagination: { start: 0, limit: $numberOfTodaysVotes }
+    filters: { createdAt: { gte: "${startOfDay}", lte: "${endOfDay}" } }
+  ) {
+    data {
+      id
+      attributes {
+        userId
+        restaurantId
+      }
+    }
+  }
+}
+`
+
+export const GET_NUMBER_OF_TODAYS_VOTES = gql`
+query getNumberOfTodaysVotes {
+  votes(
+    filters: {
+      createdAt: {
+        gte: "${startOfDay}",
+        lte: "${endOfDay}"
+      }
+    }
+  ) {
+    meta {
+      pagination {
+        total
+      }
+    }
+  }
+}
+`
