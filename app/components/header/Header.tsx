@@ -8,7 +8,7 @@ import NextLink from 'next/link'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import EditAddForm from '../EditAddForm'
 import ModalButton from '../button/ModalButton'
-import { useRestaurantCRUD } from '../../api/restaurantCRUD'
+import { useRestaurantOperations } from '../../api/useRestaurantOperations'
 import { SupportedModalButtonTypes } from '../../../interface'
 
 export const menuItems = [
@@ -19,7 +19,7 @@ export const menuItems = [
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const user = useUser()
-  const { sendCreateRestaurantRequest } = useRestaurantCRUD()
+  const { sendCreateRestaurantRequest } = useRestaurantOperations()
 
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen}>

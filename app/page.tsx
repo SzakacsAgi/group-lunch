@@ -1,22 +1,20 @@
 'use client'
 import { useEffect } from 'react'
-import { useLazyQuery, useMutation } from '@apollo/client'
-import { CREATE_USER, GET_USER } from '../query/user'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import TodaysVote from './components/dashboard/TodaysVote'
+import LastWeekTopChoices from './components/dashboard/LastWeekTopChoices'
+import { useUserOperations } from './api/useUserOperations'
 
 const App = () => {
-  const [createUser] = useMutation(CREATE_USER)
   const user = useUser()
-  const [getUser] = useLazyQuery(GET_USER)
+  const { createUser, getUserById } = useUserOperations()
 
   useEffect(() => {
     const saveUser = async () => {
       if (!user.isLoading && user.user) {
-        const userCheckResult = await getUser({ variables: { userId: user.user!.sub } })
-
-        if (userCheckResult.data.appUsers.data.length === 0) {
-          createUser({ variables: { userId: user.user!.sub, email: user.user?.email, imageUrl: user.user?.picture, userName: user.user?.name } })
+        const isSavedUser = (await getUserById(user.user.sub!)).data.appUsers.data.length > 0
+        if (!isSavedUser) {
+          await createUser(user.user.sub!, user.user.email?.toString(), user.user.picture?.toString(), user.user.name?.toString())
         }
       }
     }
@@ -24,8 +22,9 @@ const App = () => {
   }, [user.isLoading])
 
   return (
-    <div className='p-10'>
+    <div className='p-10 flex  flex-col gap-y-20'>
       <TodaysVote />
+      <LastWeekTopChoices />
     </div>
   )
 }
