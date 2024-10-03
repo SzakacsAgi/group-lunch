@@ -1,28 +1,46 @@
 'use client'
 import { RestaurantEntity } from '../../gql/graphql'
 import { RestaurantCardData } from '../../interface'
-import { useRestaurantCRUD } from '../api/restaurantCRUD'
+import { useRestaurantOperations } from '../api/useRestaurantOperations'
 import RestaurantCard from '../components/restaurantCard/RestaurantCard'
+import getTodayStartEnd from '../../utils/getTodayStartEnd'
+import { useVoteOperations } from '../api/useVoteOperations'
 
 const VotePage = () => {
-  const { allRestaurant } = useRestaurantCRUD()
+  const { allRestaurant } = useRestaurantOperations()
+  const { getAllVotesForRestaurantInARange } = useVoteOperations()
 
-  if (allRestaurant.loading) {
-    return <div className='p-10'>Loading...</div>
-  }
-  return (
-    <div className='p-10'>
-      <div className='grid grid-cols-3 gap-6 items-center'>
-        {allRestaurant.data.restaurants.data.map((restaurant: RestaurantEntity) => (
-          <RestaurantCard
-            key={restaurant.id}
-            restaurant={restaurant}
-            dataToShow={[RestaurantCardData.TITLE, RestaurantCardData.DESCRIPTION, RestaurantCardData.VOTES, RestaurantCardData.CAN_VOTE]}
-          />
-        ))}
+  const detectContent = () => {
+    if (allRestaurant.error) {
+      return <div>Error</div>
+    }
+
+    if (allRestaurant.loading) {
+      return <div>Loading...</div>
+    }
+
+    if (allRestaurant.data.restaurants.data.length === 0) {
+      return <div>No today&apos;s votes</div>
+    }
+
+    return (
+      <div className='grid gap-8 items-center md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4'>
+        {allRestaurant.data.restaurants.data!.map((restaurant: RestaurantEntity) => {
+          const { startOfToday, endOfToday } = getTodayStartEnd()
+          return (
+            <RestaurantCard
+              key={restaurant.id}
+              getVotes={() => getAllVotesForRestaurantInARange(restaurant.id!, startOfToday, endOfToday)}
+              dataToShow={[RestaurantCardData.TITLE, RestaurantCardData.VOTES, RestaurantCardData.CAN_VOTE, RestaurantCardData.DESCRIPTION]}
+              restaurant={restaurant}
+            />
+          )
+        })}
       </div>
-    </div>
-  )
+    )
+  }
+
+  return detectContent()
 }
 
 export default VotePage

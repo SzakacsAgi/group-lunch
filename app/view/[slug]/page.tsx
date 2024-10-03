@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client'
 import { GET_RESTAURANT_BY_ID } from '../../../query/restaurant'
 import EditAddForm from '../../components/EditAddForm'
 import ModalButton from '../../components/button/ModalButton'
-import { useRestaurantCRUD } from '../../api/restaurantCRUD'
+import { useRestaurantCRUD } from '../../api/useRestaurantOperations'
 import { SupportedModalButtonTypes } from '../../../interface'
 
 const EditRestaurant = ({ params }: { params: { slug: string } }) => {

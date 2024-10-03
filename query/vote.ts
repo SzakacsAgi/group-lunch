@@ -56,20 +56,38 @@ export const DELETE_VOTE = gql`
   }
 `
 
-const today = new Date()
-const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString()
-const endOfDay = new Date(today.setHours(23, 59, 59, 999)).toISOString()
+export const GET_VOTES_NUMBER_FOR_A_RESTAURANT_IN_A_RANGE = gql`
+  query getVotesNumberForARestaurantInARange($restaurantId: String!, $startOfTheRange: DateTime!, $endOfTheRange: DateTime!) {
+    votes(filters: { restaurantId: { eq: $restaurantId }, createdAt: { gte: $startOfTheRange, lte: $endOfTheRange } }) {
+      meta {
+        pagination {
+          total
+        }
+      }
+    }
+  }
+`
 
-export const GET_TODAYS_VOTES = gql`  
-  query getTodaysVotes($restaurantId: String!) {
-    votes(filters: { 
-      createdAt: { 
-        gte: "${startOfDay}", 
-        lte: "${endOfDay}" 
-      },
-        restaurantId: { eq: $restaurantId }
-    }, sort: "createdAt:desc") {
-      data{
+export const GET_VOTES_NUMBER_IN_A_RANGE = gql`
+  query getVotesNumberInARange($startOfTheRange: DateTime!, $endOfTheRange: DateTime!) {
+    votes(filters: { createdAt: { gte: $startOfTheRange, lte: $endOfTheRange } }) {
+      meta {
+        pagination {
+          total
+        }
+      }
+    }
+  }
+`
+
+export const GET_ALL_VOTES_FOR_RESTAURANT_IN_A_RANGE = gql`
+  query getAllVotesForRestaurantInARange($restaurantId: String!, $totalNumberOfVotes: Int!, $startOfTheRange: DateTime!, $endOfTheRange: DateTime!) {
+    votes(
+      pagination: { start: 0, limit: $totalNumberOfVotes }
+      filters: { restaurantId: { eq: $restaurantId }, createdAt: { gte: $startOfTheRange, lte: $endOfTheRange } }
+      sort: "createdAt:desc"
+    ) {
+      data {
         id
         attributes {
           userId
@@ -79,50 +97,20 @@ export const GET_TODAYS_VOTES = gql`
     }
   }
 `
-
-export const GET_VOTES_NUMBER_FOR_RESTAURANT = gql`
-  query getVotesNumberForRestaurant($restaurantId: String!) {
-    votes {
-      meta {
-        pagination {
-          total
+export const GET_ALL_VOTES_IN_A_RANGE = gql`
+  query getAllVotesInARange($totalNumberOfVotes: Int!, $startOfTheRange: DateTime!, $endOfTheRange: DateTime!) {
+    votes(
+      pagination: { start: 0, limit: $totalNumberOfVotes }
+      filters: { createdAt: { gte: $startOfTheRange, lte: $endOfTheRange } }
+      sort: "createdAt:desc"
+    ) {
+      data {
+        id
+        attributes {
+          userId
+          restaurantId
         }
       }
     }
   }
-`
-export const GET_ALL_TODAYS_VOTES = gql`
-query getAllTodaysVotes($numberOfTodaysVotes: Int!) {
-  votes(
-    pagination: { start: 0, limit: $numberOfTodaysVotes }
-    filters: { createdAt: { gte: "${startOfDay}", lte: "${endOfDay}" } }
-  ) {
-    data {
-      id
-      attributes {
-        userId
-        restaurantId
-      }
-    }
-  }
-}
-`
-
-export const GET_NUMBER_OF_TODAYS_VOTES = gql`
-query getNumberOfTodaysVotes {
-  votes(
-    filters: {
-      createdAt: {
-        gte: "${startOfDay}",
-        lte: "${endOfDay}"
-      }
-    }
-  ) {
-    meta {
-      pagination {
-        total
-      }
-    }
-  }
-}
 `

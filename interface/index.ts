@@ -1,4 +1,5 @@
 import { ComponentType, SVGProps } from 'react'
+import { VoteEntity } from '../gql/graphql'
 
 export interface RestaurantData {
   title: string
@@ -22,4 +23,10 @@ export enum RestaurantCardData {
 
 export type IconComponentType = ComponentType<SVGProps<SVGSVGElement>> & {
   className?: string
+}
+
+export interface VotesData {
+  votes: {
+    data: VoteEntity[]
+  }
 }

@@ -2,31 +2,24 @@ import { Avatar, AvatarGroup as NextAvatarGroup, Tooltip } from '@nextui-org/rea
 import { AppUser, VoteEntity } from '../../../../gql/graphql'
 import { FunctionComponent, useEffect, useRef, useState } from 'react'
 import RestVotes from '../RestVotes'
-import { useLazyQuery } from '@apollo/client'
-import { GET_USER } from '../../../../query/user'
+import React from 'react'
+import { useUserOperations } from '../../../api/useUserOperations'
 
 interface AvatarGroupProps {
-  allVotes: VoteEntity[]
+  usersToShow: VoteEntity[]
 }
 
-const AvatarGroup: FunctionComponent<AvatarGroupProps> = ({ allVotes }) => {
-  const [getUser] = useLazyQuery(GET_USER)
+const AvatarGroup: FunctionComponent<AvatarGroupProps> = ({ usersToShow }) => {
+  const { getVotedUserInfo } = useUserOperations()
 
   useEffect(() => {
     const fetchUserInfos = async () => {
-      const usersData = await Promise.all(
-        allVotes.map(async (vote: VoteEntity) => {
-          const { data } = await getUser({ variables: { userId: vote.attributes?.userId } })
-          return data.appUsers.data[0].attributes
-        })
-      )
+      const usersData = await Promise.all(usersToShow.map(async (vote: VoteEntity) => await getVotedUserInfo(vote)))
       setUserInfos(usersData)
     }
 
-    if (allVotes.length !== 0) {
-      fetchUserInfos()
-    }
-  }, [allVotes, getUser])
+    fetchUserInfos()
+  }, [usersToShow])
 
   const [userInfos, setUserInfos] = useState<AppUser[]>([])
   const numberToShow = 3
