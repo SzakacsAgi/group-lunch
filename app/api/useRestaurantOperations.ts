@@ -8,6 +8,7 @@ import { RestaurantEntity, VoteEntity } from '../../gql/graphql'
 import { GET_ALL_VOTES_IN_A_RANGE, GET_VOTES_NUMBER_IN_A_RANGE } from '../../query/vote'
 import getTodayStartEnd from '../../utils/getTodayStartEnd'
 import getPreviousWeekStartEnd from '../../utils/getPreviousWeekStartEnd'
+import { useVoteOperations } from './useVoteOperations'
 
 const useRestaurantOperations = () => {
   const [editRestaurant] = useMutation(UPDATE_RESTAURANT)
@@ -16,7 +17,8 @@ const useRestaurantOperations = () => {
   const allRestaurant = useQuery(GET_RESTAURANTS)
   const [getAllVotesInARange] = useLazyQuery(GET_ALL_VOTES_IN_A_RANGE)
   const [getRestaurantById] = useLazyQuery(GET_RESTAURANT_BY_ID)
-  const [getVotesNumberInARange] = useLazyQuery(GET_VOTES_NUMBER_IN_A_RANGE)
+  const [getVotesNumberInARange] = useLazyQuery(GET_VOTES_NUMBER_IN_A_RANGE, { fetchPolicy: 'no-cache' })
+  const { getAllUserVotes } = useVoteOperations()
 
   const router = useRouter()
 
@@ -148,6 +150,44 @@ const useRestaurantOperations = () => {
     return await getRestaurants()
   }
 
+  const sendGetRecentlyVotedRestaurantsByUser = async (numberOfRestaurantToGet: number, userId: string) => {
+    const userRecentlyVotes = await getAllUserVotes(userId)
+    const votedRestaurantIds = userRecentlyVotes.map((vote: VoteEntity) => vote.attributes?.restaurantId)
+
+    const filteredRestaurantIds: string[] = votedRestaurantIds.reduce((accumulator: Array<string>, restaurantId: string) => {
+      if (!accumulator.includes(restaurantId)) {
+        accumulator.push(restaurantId)
+      }
+      return accumulator
+    }, [])
+
+    let restaurantsToGet
+
+    if (filteredRestaurantIds.length > numberOfRestaurantToGet) {
+      restaurantsToGet = filteredRestaurantIds.slice(0, numberOfRestaurantToGet)
+    } else {
+      restaurantsToGet = filteredRestaurantIds
+    }
+
+    const getRestaurants = async () => {
+      const restaurants: RestaurantEntity[] = []
+      const restaurantPromises = restaurantsToGet.map(async (restaurantId: string) => {
+        const restaurantData = await getRestaurantById({
+          variables: {
+            restaurantId,
+          },
+        })
+        return restaurantData.data.restaurant.data
+      })
+
+      const results = await Promise.all(restaurantPromises)
+      restaurants.push(...results)
+
+      return restaurants
+    }
+    return await getRestaurants()
+  }
+
   return {
     sendCreateRestaurantRequest,
     allRestaurant,
@@ -155,6 +195,7 @@ const useRestaurantOperations = () => {
     sendDeleteRestaurantRequest,
     sendGetTodayVotedRestaurantsRequest,
     sendGetPrevWeeksTopVotedRestaurantsRequest,
+    sendGetRecentlyVotedRestaurantsByUser,
   }
 }
 

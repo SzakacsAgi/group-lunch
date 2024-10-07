@@ -15,7 +15,7 @@ import { OperationVariables, QueryResult } from '@apollo/client'
 interface RestaurantCardProps {
   restaurant: RestaurantEntity
   dataToShow: RestaurantCardData[]
-  getVotes: () => Promise<QueryResult<VotesData, OperationVariables>>
+  getVotes?: () => Promise<QueryResult<VotesData, OperationVariables>>
 }
 
 const RestaurantCard = ({ restaurant, dataToShow, getVotes }: RestaurantCardProps) => {
@@ -27,10 +27,10 @@ const RestaurantCard = ({ restaurant, dataToShow, getVotes }: RestaurantCardProp
 
   useEffect(() => {
     const fetchVotes = async () => {
-      const votes = await getVotes()
+      const votes = await getVotes!()
       setVotes(votes)
     }
-    fetchVotes()
+    getVotes && fetchVotes()
   }, [voteModifiedCount])
 
   const handleViewClick = () => {
@@ -54,7 +54,7 @@ const RestaurantCard = ({ restaurant, dataToShow, getVotes }: RestaurantCardProp
     const myVote = votes!.data!.votes.data.filter((vote: VoteEntity) => vote.attributes!.userId === user.user?.sub)
 
     return (
-      <div className='flex w-full gap-y-3 justify-between items-center'>
+      <div className='flex w-full gap-y-3 justify-between items-center mx-auto'>
         {toBeDisplayed(RestaurantCardData.VOTES) && isVotesForRestaurant ? (
           <AvatarGroup usersToShow={votes.data!.votes.data} />
         ) : (
@@ -100,9 +100,12 @@ const RestaurantCard = ({ restaurant, dataToShow, getVotes }: RestaurantCardProp
         {toBeDisplayed(RestaurantCardData.DESCRIPTION) && <p>{restaurant?.attributes?.description}</p>}
         {toBeDisplayed(RestaurantCardData.URL) && <p>{restaurant?.attributes?.url}</p>}
       </CardBody>
-      <CardFooter className={`flex flex-col justify-center items-center p-5 px-7 pt-1 overflow-visible ${votes?.data!.votes.data.length === 0 ? 'px-5' : ''}`}>
-        {detectVotes()}
-      </CardFooter>
+      {toBeDisplayed(RestaurantCardData.VOTES) && (
+        <CardFooter
+          className={`flex flex-col justify-center items-center p-5 px-7 pt-1 overflow-visible ${votes?.data!.votes.data.length === 0 ? 'px-5' : ''}`}>
+          {detectVotes()}
+        </CardFooter>
+      )}
     </Card>
   )
 }

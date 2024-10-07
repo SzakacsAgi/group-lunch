@@ -15,7 +15,16 @@ const AvatarGroup: FunctionComponent<AvatarGroupProps> = ({ usersToShow }) => {
   useEffect(() => {
     const fetchUserInfos = async () => {
       const usersData = await Promise.all(usersToShow.map(async (vote: VoteEntity) => await getVotedUserInfo(vote)))
-      setUserInfos(usersData)
+
+      const uniqueUsers = usersData.reduce((acc, current) => {
+        const isDuplicate = acc.find((user: AppUser) => user.userId === current.userId)
+        if (!isDuplicate) {
+          acc.push(current)
+        }
+        return acc
+      }, [])
+
+      setUserInfos(uniqueUsers)
     }
 
     fetchUserInfos()
@@ -56,7 +65,7 @@ const AvatarGroup: FunctionComponent<AvatarGroupProps> = ({ usersToShow }) => {
         ))}
       </NextAvatarGroup>
       {isOpen && (
-        <div className='absolute top-[68px] right-4 z-20'>
+        <div className='absolute -bottom-16 left-2.5 z-20'>
           <RestVotes users={restVotes} closeRestVotes={handleMoreClick} ref={restVotesTogglerRef} />
         </div>
       )}
