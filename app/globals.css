@@ -5,3 +5,7 @@
 header {
   max-width: 100% !important;
 }
+
+.keen-slider__slide > div {
+  margin: 0 auto;
+}

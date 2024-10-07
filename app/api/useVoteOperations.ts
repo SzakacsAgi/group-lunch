@@ -1,7 +1,7 @@
 'use client'
 
 import { OperationVariables, QueryResult, useLazyQuery, useMutation } from '@apollo/client'
-import { CREATE_VOTE, DELETE_VOTE } from '../../query/vote'
+import { CREATE_VOTE, DELETE_VOTE, GET_VOTES_FOR_A_USER, GET_VOTES_NUMBER_FOR_A_USER } from '../../query/vote'
 import { useUser } from '@auth0/nextjs-auth0/client'
 import { GET_ALL_VOTES_FOR_RESTAURANT_IN_A_RANGE, GET_VOTES_NUMBER_FOR_A_RESTAURANT_IN_A_RANGE } from '../../query/vote'
 import { VotesData } from '../../interface'
@@ -12,6 +12,8 @@ const useVoteOperations = () => {
   const [deleteVote] = useMutation(DELETE_VOTE)
   const [getVotesNumberForARestaurantInARange] = useLazyQuery(GET_VOTES_NUMBER_FOR_A_RESTAURANT_IN_A_RANGE, { fetchPolicy: 'no-cache' })
   const [getAllVotesForRestaurantInARangeQuery] = useLazyQuery(GET_ALL_VOTES_FOR_RESTAURANT_IN_A_RANGE, { fetchPolicy: 'no-cache' })
+  const [getVotesNumberForAUser] = useLazyQuery(GET_VOTES_NUMBER_FOR_A_USER, { fetchPolicy: 'no-cache' })
+  const [getVotesForAUser] = useLazyQuery(GET_VOTES_FOR_A_USER, { fetchPolicy: 'no-cache' })
 
   const sendCreateVoteRequest = async (restaurantId: string) => {
     try {
@@ -61,7 +63,14 @@ const useVoteOperations = () => {
     })
   }
 
-  return { sendCreateVoteRequest, sendDeleteVoteRequest, getAllVotesForRestaurantInARange }
+  const getAllUserVotes = async (userId: string) => {
+    const userVotesNumber = await (await getVotesNumberForAUser({ variables: { userId: userId } })).data.votes.meta.pagination.total
+    return await (
+      await getVotesForAUser({ variables: { toGet: userVotesNumber, userId: userId } })
+    ).data.votes.data
+  }
+
+  return { sendCreateVoteRequest, sendDeleteVoteRequest, getAllVotesForRestaurantInARange, getAllUserVotes }
 }
 
 export { useVoteOperations }

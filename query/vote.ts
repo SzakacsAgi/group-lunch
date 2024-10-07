@@ -114,3 +114,28 @@ export const GET_ALL_VOTES_IN_A_RANGE = gql`
     }
   }
 `
+export const GET_VOTES_NUMBER_FOR_A_USER = gql`
+  query getVotesNumberForAUser($userId: String!) {
+    votes(filters: { userId: { eq: $userId } }) {
+      meta {
+        pagination {
+          total
+        }
+      }
+    }
+  }
+`
+
+export const GET_VOTES_FOR_A_USER = gql`
+  query getVotesForAUser($toGet: Int!, $userId: String!) {
+    votes(pagination: { start: 0, limit: $toGet }, filters: { userId: { eq: $userId } }, sort: "createdAt:desc") {
+      data {
+        id
+        attributes {
+          userId
+          restaurantId
+        }
+      }
+    }
+  }
+`
