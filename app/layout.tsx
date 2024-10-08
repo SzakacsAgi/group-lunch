@@ -14,10 +14,10 @@ export default function RootLayout({
       <head>
         <title>Group lunch</title>
       </head>
-      <body className='h-full'>
+      <body>
         <GraphQlProvider>
           <UserProvider>
-            <section className='h-full grid grid-rows-[auto_1fr_auto]'>
+            <section className='grid grid-rows-[auto_1fr_auto]'>
               <Header />
               {children}
               <Footer />

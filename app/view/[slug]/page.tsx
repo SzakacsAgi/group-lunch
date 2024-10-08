@@ -3,12 +3,12 @@ import { useQuery } from '@apollo/client'
 import { GET_RESTAURANT_BY_ID } from '../../../query/restaurant'
 import EditAddForm from '../../components/EditAddForm'
 import ModalButton from '../../components/button/ModalButton'
-import { useRestaurantCRUD } from '../../api/useRestaurantOperations'
+import { useRestaurantOperations } from '../../api/useRestaurantOperations'
 import { SupportedModalButtonTypes } from '../../../interface'
 
 const EditRestaurant = ({ params }: { params: { slug: string } }) => {
   const restaurantToView = useQuery(GET_RESTAURANT_BY_ID, { variables: { restaurantId: params.slug } })
-  const { sendUpdateRestaurantRequest, sendDeleteRestaurantRequest } = useRestaurantCRUD()
+  const { sendUpdateRestaurantRequest, sendDeleteRestaurantRequest } = useRestaurantOperations()
 
   if (restaurantToView.loading) {
     return <div>Loading...</div>

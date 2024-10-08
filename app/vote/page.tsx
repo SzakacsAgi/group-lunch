@@ -5,38 +5,77 @@ import { useRestaurantOperations } from '../api/useRestaurantOperations'
 import RestaurantCard from '../components/restaurantCard/RestaurantCard'
 import getTodayStartEnd from '../../utils/getTodayStartEnd'
 import { useVoteOperations } from '../api/useVoteOperations'
+import { useInfiniteScroll } from '../api/useInfiniteScroll'
+import { useEffect, useState } from 'react'
 
 const VotePage = () => {
-  const { allRestaurant } = useRestaurantOperations()
+  const [restaurant, setRestaurant] = useState<RestaurantEntity[]>([])
+  const { fetchData, response } = useInfiniteScroll<RestaurantEntity>(9)
+  const { sendGetRestaurantsRequest } = useRestaurantOperations()
+
+  useEffect(() => {
+    fetchData(sendGetRestaurantsRequest, false)
+  }, [])
+
+  useEffect(() => {
+    if (!response.loading && response.data && response.data.length > 0) {
+      setRestaurant((prevState) => [...prevState, ...response.data!])
+    }
+  }, [response.data, response.loading])
+
+  const handleScroll = () => {
+    if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 20 && !response.loading) {
+      fetchData(sendGetRestaurantsRequest, false)
+    }
+  }
+
+  useEffect(() => {
+    if (response.hasMore) {
+      window.addEventListener('scroll', handleScroll)
+      return () => window.removeEventListener('scroll', handleScroll)
+    }
+  }, [response.loading])
+
   const { getAllVotesForRestaurantInARange } = useVoteOperations()
 
   const detectContent = () => {
-    if (allRestaurant.error) {
+    if (response.error) {
       return <div>Error</div>
     }
 
-    if (allRestaurant.loading) {
-      return <div>Loading...</div>
+    if (response.loading && restaurant.length === 0) {
+      return <div className={`p-10 h-[90vh]`}>Loading...</div>
     }
 
-    if (allRestaurant.data.restaurants.data.length === 0) {
-      return <div>No today&apos;s votes</div>
+    if (response.data!.length === 0 && restaurant.length === 0) {
+      return <div>There is no restaurant to vote</div>
     }
 
     return (
-      <div className='grid gap-8 items-center md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4'>
-        {allRestaurant.data.restaurants.data!.map((restaurant: RestaurantEntity) => {
-          const { startOfToday, endOfToday } = getTodayStartEnd()
-          return (
-            <RestaurantCard
-              key={restaurant.id}
-              getVotes={() => getAllVotesForRestaurantInARange(restaurant.id!, startOfToday, endOfToday)}
-              dataToShow={[RestaurantCardData.TITLE, RestaurantCardData.VOTES, RestaurantCardData.CAN_VOTE, RestaurantCardData.DESCRIPTION]}
-              restaurant={restaurant}
-            />
-          )
-        })}
-      </div>
+      <section className='flex w-full gap-x-10'>
+        <aside className='w-56 border border-gray-600 sticky max-h-screen top-[0px] rounded-lg border-b-0 rounded-b-none mt-10 z-50'>
+          <div>Szűrés</div>
+        </aside>
+        <div className='w-full flex flex-col gap-y-1'>
+          <div className='mt-10 mb-5'>
+            <input className='border-gray-600 border rounded-md' type='text' name='' id='' />
+          </div>
+          <div className='grid gap-8 items-center md:grid-cols-2 xl:grid-cols-3 pb-5' key='KEYYY'>
+            {restaurant.map((restaurant: RestaurantEntity) => {
+              const { startOfToday, endOfToday } = getTodayStartEnd()
+              return (
+                <RestaurantCard
+                  key={restaurant.id}
+                  getVotes={() => getAllVotesForRestaurantInARange(restaurant.id!, startOfToday, endOfToday)}
+                  dataToShow={[RestaurantCardData.TITLE, RestaurantCardData.VOTES, RestaurantCardData.CAN_VOTE, RestaurantCardData.DESCRIPTION]}
+                  restaurant={restaurant}
+                />
+              )
+            })}
+            {response.loading && <div>loadiiing</div>}
+          </div>
+        </div>
+      </section>
     )
   }
 

@@ -31,8 +31,13 @@ export const UPDATE_RESTAURANT = gql`
 `
 
 export const GET_RESTAURANTS = gql`
-  query getRestaurants {
-    restaurants {
+  query getRestaurants($from: Int!, $toGet: Int!) {
+    restaurants(pagination: { start: $from, limit: $toGet }) {
+      meta {
+        pagination {
+          pageCount
+        }
+      }
       data {
         id
         attributes {
