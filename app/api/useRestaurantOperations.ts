@@ -1,6 +1,6 @@
 'use client'
 
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client'
+import { useLazyQuery, useMutation } from '@apollo/client'
 import { RestaurantData } from '../../interface'
 import { CREATE_RESTAURANT, DELETE_RESTAURANT, GET_RESTAURANT_BY_ID, GET_RESTAURANTS, UPDATE_RESTAURANT } from '../../query/restaurant'
 import { useRouter } from 'next/navigation'
@@ -14,11 +14,11 @@ const useRestaurantOperations = () => {
   const [editRestaurant] = useMutation(UPDATE_RESTAURANT)
   const [addRestaurant] = useMutation(CREATE_RESTAURANT)
   const [deleteRestaurant] = useMutation(DELETE_RESTAURANT)
-  const allRestaurant = useQuery(GET_RESTAURANTS)
   const [getAllVotesInARange] = useLazyQuery(GET_ALL_VOTES_IN_A_RANGE)
   const [getRestaurantById] = useLazyQuery(GET_RESTAURANT_BY_ID)
   const [getVotesNumberInARange] = useLazyQuery(GET_VOTES_NUMBER_IN_A_RANGE, { fetchPolicy: 'no-cache' })
   const { getAllUserVotes } = useVoteOperations()
+  const [getRestaurants] = useLazyQuery(GET_RESTAURANTS, { fetchPolicy: 'no-cache' })
 
   const router = useRouter()
 
@@ -47,7 +47,6 @@ const useRestaurantOperations = () => {
           description: data.description,
         },
       })
-      allRestaurant.refetch()
     } catch (error) {
       alert('Error')
       console.error(error)
@@ -188,14 +187,20 @@ const useRestaurantOperations = () => {
     return await getRestaurants()
   }
 
+  const sendGetRestaurantsRequest = async (currentPage: number, pageSize: number) => {
+    const from = currentPage * pageSize
+    const restaurants = await getRestaurants({ variables: { from: from, toGet: pageSize } })
+    return restaurants.data.restaurants.data
+  }
+
   return {
     sendCreateRestaurantRequest,
-    allRestaurant,
     sendUpdateRestaurantRequest,
     sendDeleteRestaurantRequest,
     sendGetTodayVotedRestaurantsRequest,
     sendGetPrevWeeksTopVotedRestaurantsRequest,
     sendGetRecentlyVotedRestaurantsByUser,
+    sendGetRestaurantsRequest,
   }
 }
 
