@@ -91,10 +91,21 @@ const RestaurantCard = ({ restaurant, dataToShow, getVotes }: RestaurantCardProp
 
   return (
     <Card className='overflow-visible max-w-80 rounded-md'>
-      <CardHeader className='h-52 rounded-t-md bg-center bg-[url("https://lh5.googleusercontent.com/proxy/t08n2HuxPfw8OpbutGWjekHAgxfPFv-pZZ5_-uTfhEGK8B5Lp-VN4VjrdxKtr8acgJA93S14m9NdELzjafFfy13b68pQ7zzDiAmn4Xg8LvsTw1jogn_7wStYeOx7ojx5h63Gliw")]' />
+      <CardHeader
+        className='h-52 rounded-t-md bg-center bg-no-repeat'
+        style={{
+          backgroundImage: `url(${
+            restaurant.attributes?.image?.data?.attributes?.formats?.small?.url
+              ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${restaurant.attributes?.image?.data?.attributes?.formats.small.url}`
+              : restaurant.attributes?.image?.data?.attributes?.url
+              ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${restaurant.attributes?.image?.data?.attributes?.url}`
+              : 'https://lh5.googleusercontent.com/proxy/t08n2HuxPfw8OpbutGWjekHAgxfPFv-pZZ5_-uTfhEGK8B5Lp-VN4VjrdxKtr8acgJA93S14m9NdELzjafFfy13b68pQ7zzDiAmn4Xg8LvsTw1jogn_7wStYeOx7ojx5h63Gliw'
+          })`,
+        }}
+      />
       <CardBody className='flex flex-col gap-y-3 p-5 pb-2'>
         <div className='flex gap-x-2'>
-          {toBeDisplayed(RestaurantCardData.TITLE) && <h3 className='text-2xl font-medium'>{restaurant?.attributes?.title}</h3>}
+          {toBeDisplayed(RestaurantCardData.NAME) && <h3 className='text-2xl font-medium'>{restaurant?.attributes?.name}</h3>}
           <ArrowTopRightOnSquareIcon className='w-3 cursor-pointer' onClick={handleViewClick} />
         </div>
         {toBeDisplayed(RestaurantCardData.DESCRIPTION) && <p>{restaurant?.attributes?.description}</p>}

@@ -1,4 +1,6 @@
+import { OperationVariables, QueryResult } from '@apollo/client'
 import { useState } from 'react'
+import { RestaurantDataResponse } from '../../interface'
 
 interface ApiResponse<T> {
   data: T[] | null
@@ -9,8 +11,8 @@ interface ApiResponse<T> {
   allPage: number | null
 }
 
-const useInfiniteScroll = <T>(pageSize: number) => {
-  type FetchItems = (page: number, pageSize: number) => Promise<T[]>
+const useInfiniteScroll = <T, K extends string>(key: K, pageSize: number) => {
+  type FetchItems = (page: number, pageSize: number) => Promise<QueryResult<RestaurantDataResponse<T, K>, OperationVariables>>
 
   const [response, setResponse] = useState<ApiResponse<T>>({
     data: [],
@@ -24,23 +26,23 @@ const useInfiniteScroll = <T>(pageSize: number) => {
   const fetchData = async (fetchItems: FetchItems, toResetItems: boolean) => {
     setResponse((response) => ({ ...response, loading: true }))
     if (toResetItems) {
-      setResponse((response) => ({ ...response, page: 0 }))
+      setResponse((currentResponse) => ({ ...currentResponse, page: 0 }))
     }
     try {
       const result = await fetchItems(response.page, pageSize)
-      setResponse((response) => ({
-        ...response,
-        hasMore: response.allPage === response.page - 1,
-        page: response.page + 1,
-        data: result,
+      setResponse((currentResponse) => ({
+        ...currentResponse,
+        hasMore: result!.data![key]!.meta!.pagination!.pageCount !== currentResponse.page - 1,
+        page: currentResponse.page + 1,
+        data: result.data![key]!.data,
         loading: false,
         error: null,
       }))
     } catch (error) {
       console.error(error)
-      setResponse((response) => ({ ...response, error: 'Was not be able to fetch' }))
+      setResponse((currentResponse) => ({ ...currentResponse, error: 'Was not able to fetch' }))
     } finally {
-      setResponse((response) => ({ ...response, loading: false }))
+      setResponse((currentResponse) => ({ ...currentResponse, loading: false }))
     }
   }
 

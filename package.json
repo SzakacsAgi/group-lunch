@@ -40,7 +40,9 @@
     "prettier": "^2.5.1",
     "react": "^18",
     "react-dom": "^18",
-    "react-hook-form": "^7.53.0"
+    "react-hook-form": "^7.53.0",
+    "recoil": "^0.7.7",
+    "recoil-persist": "^5.1.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.2",

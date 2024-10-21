@@ -39,7 +39,7 @@ const RecentlyVotes = () => {
     }
 
     const slides = restaurants.map((restaurants) => (
-      <RestaurantCard key={`recent-${restaurants.id}`} restaurant={restaurants} dataToShow={[RestaurantCardData.TITLE, RestaurantCardData.DESCRIPTION]} />
+      <RestaurantCard key={`recent-${restaurants.id}`} restaurant={restaurants} dataToShow={[RestaurantCardData.NAME, RestaurantCardData.DESCRIPTION]} />
     ))
 
     return <Carousel slides={slides} />

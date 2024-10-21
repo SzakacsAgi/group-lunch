@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 
 const VotePage = () => {
   const [restaurant, setRestaurant] = useState<RestaurantEntity[]>([])
-  const { fetchData, response } = useInfiniteScroll<RestaurantEntity>(9)
+  const { fetchData, response } = useInfiniteScroll<RestaurantEntity, 'restaurants'>('restaurants', 9)
   const { sendGetRestaurantsRequest } = useRestaurantOperations()
 
   useEffect(() => {
@@ -60,14 +60,14 @@ const VotePage = () => {
           <div className='mt-10 mb-5'>
             <input className='border-gray-600 border rounded-md' type='text' name='' id='' />
           </div>
-          <div className='grid gap-8 items-center md:grid-cols-2 xl:grid-cols-3 pb-5' key='KEYYY'>
+          <div className='grid gap-8 items-center md:grid-cols-2 xl:grid-cols-3 pb-5'>
             {restaurant.map((restaurant: RestaurantEntity) => {
               const { startOfToday, endOfToday } = getTodayStartEnd()
               return (
                 <RestaurantCard
                   key={restaurant.id}
                   getVotes={() => getAllVotesForRestaurantInARange(restaurant.id!, startOfToday, endOfToday)}
-                  dataToShow={[RestaurantCardData.TITLE, RestaurantCardData.VOTES, RestaurantCardData.CAN_VOTE, RestaurantCardData.DESCRIPTION]}
+                  dataToShow={[RestaurantCardData.NAME, RestaurantCardData.VOTES, RestaurantCardData.CAN_VOTE, RestaurantCardData.DESCRIPTION]}
                   restaurant={restaurant}
                 />
               )

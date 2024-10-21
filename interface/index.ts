@@ -2,9 +2,14 @@ import { ComponentType, SVGProps } from 'react'
 import { VoteEntity } from '../gql/graphql'
 
 export interface RestaurantData {
-  title: string
+  name: string
   description: string
   url: string
+  address: string
+  distance: string
+  category: string
+  price: '$' | '$$' | '$$$' | '$$$$'
+  image: FileList
 }
 
 export enum SupportedModalButtonTypes {
@@ -14,7 +19,7 @@ export enum SupportedModalButtonTypes {
 }
 
 export enum RestaurantCardData {
-  TITLE = 'title',
+  NAME = 'name',
   DESCRIPTION = 'description',
   URL = 'url',
   VOTES = 'votes',
@@ -28,5 +33,16 @@ export type IconComponentType = ComponentType<SVGProps<SVGSVGElement>> & {
 export interface VotesData {
   votes: {
     data: VoteEntity[]
+  }
+}
+
+export type RestaurantDataResponse<T, K extends keyof never> = {
+  [key in K]: {
+    data: T[]
+    meta: {
+      pagination: {
+        pageCount: number
+      }
+    }
   }
 }
