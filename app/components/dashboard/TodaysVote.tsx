@@ -71,7 +71,7 @@ const TodaysVote = () => {
             return (
               <RestaurantCard
                 key={restaurant.id}
-                dataToShow={[RestaurantCardData.TITLE, RestaurantCardData.VOTES]}
+                dataToShow={[RestaurantCardData.NAME, RestaurantCardData.VOTES]}
                 restaurant={restaurant}
                 getVotes={() => getAllVotesForRestaurantInARange(restaurant.id!, startOfToday, endOfToday)}
               />

@@ -45,7 +45,7 @@ const LastWeekTopChoices = () => {
             <RestaurantCard
               key={restaurant.id}
               restaurant={restaurant}
-              dataToShow={[RestaurantCardData.TITLE, RestaurantCardData.VOTES]}
+              dataToShow={[RestaurantCardData.NAME, RestaurantCardData.VOTES]}
               getVotes={() => getAllVotesForRestaurantInARange(restaurant.id!, startOfThePrevWeek, endOfThePrevWeek)}
             />
           )

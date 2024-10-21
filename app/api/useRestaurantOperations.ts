@@ -22,14 +22,33 @@ const useRestaurantOperations = () => {
 
   const router = useRouter()
 
-  const sendUpdateRestaurantRequest = async (data: RestaurantData, id: string) => {
+  const sendUpdateRestaurantRequest = async (data: RestaurantData, restaurantId: string, imageId?: string) => {
     try {
+      if (imageId) {
+        await editRestaurant({
+          variables: {
+            id: restaurantId,
+            name: data.name,
+            url: data.url,
+            description: data.description,
+            address: data.address,
+            distance: Number.parseFloat(data.distance),
+            category: data.category,
+            price: data.price,
+            image: imageId,
+          },
+        })
+      }
       await editRestaurant({
         variables: {
-          id: id,
-          title: data.title,
+          id: restaurantId,
+          name: data.name,
           url: data.url,
           description: data.description,
+          address: data.address,
+          distance: Number.parseFloat(data.distance),
+          category: data.category,
+          price: data.price,
         },
       })
     } catch (error) {
@@ -38,13 +57,31 @@ const useRestaurantOperations = () => {
     }
   }
 
-  const sendCreateRestaurantRequest = async (data: RestaurantData) => {
+  const sendCreateRestaurantRequest = async (data: RestaurantData, _restId: string, imageId?: string) => {
     try {
+      if (imageId) {
+        await addRestaurant({
+          variables: {
+            name: data.name,
+            url: data.url,
+            description: data.description,
+            address: data.address,
+            distance: Number.parseFloat(data.distance),
+            category: data.category,
+            price: data.price,
+            image: imageId,
+          },
+        })
+      }
       await addRestaurant({
         variables: {
-          title: data.title,
+          name: data.name,
           url: data.url,
           description: data.description,
+          address: data.address,
+          distance: Number.parseFloat(data.distance),
+          category: data.category,
+          price: data.price,
         },
       })
     } catch (error) {
@@ -190,7 +227,7 @@ const useRestaurantOperations = () => {
   const sendGetRestaurantsRequest = async (currentPage: number, pageSize: number) => {
     const from = currentPage * pageSize
     const restaurants = await getRestaurants({ variables: { from: from, toGet: pageSize } })
-    return restaurants.data.restaurants.data
+    return restaurants
   }
 
   return {

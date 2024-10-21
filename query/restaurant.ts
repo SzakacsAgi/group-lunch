@@ -1,33 +1,99 @@
 import { gql } from '@apollo/client'
 
 export const CREATE_RESTAURANT = gql`
-    mutation createRestaurant($title: String!, $description: String!, $url: String!){
-        createRestaurant(data:{title:$title, description: $description, url: $url, publishedAt: "${new Date().toISOString()}"}){
-            data{
-                id
-                attributes{
-                    title
-                    description
-                    url
-                }
+mutation createRestaurant(
+  $name: String!
+  $description: String
+  $url: String!
+  $address: String!
+  $distance: Float
+  $category: String!
+  $price: String!
+  $image: ID
+) {
+  createRestaurant(
+    data: {
+      name: $name
+      description: $description
+      url: $url
+      address: $address
+      distance: $distance
+      category: $category
+      price: $price
+      image: $image
+      publishedAt: "${new Date().toISOString()}"
+    }
+  ) {
+    data {
+      id
+      attributes {
+        name
+        description
+        url
+        address
+        distance
+        category
+        price
+        image {
+            data {
+              attributes {
+                formats
+              }
             }
-        }
-    } 
-`
-
-export const UPDATE_RESTAURANT = gql`
-  mutation updateRestaurant($id: ID!, $title: String, $description: String, $url: String) {
-    updateRestaurant(id: $id, data: { title: $title, description: $description, url: $url }) {
-      data {
-        id
-        attributes {
-          title
-          description
-          url
-        }
+          }
       }
     }
   }
+}
+`
+
+export const UPDATE_RESTAURANT = gql`
+  mutation updateRestaurant(
+  $id:ID!
+  $name: String!
+  $description: String
+  $url: String!
+  $address: String!
+  $distance: Float
+  $category: String!
+  $price: String!
+  $image: ID
+) {
+  updateRestaurant(
+    id: $id
+    data: {
+      name: $name
+      description: $description
+      url: $url
+      address: $address
+      distance: $distance
+      category: $category
+      price: $price
+      image: $image
+      publishedAt: "${new Date().toISOString()}"
+    }
+  ) {
+    data {
+      id
+      attributes {
+        name
+        description
+        url
+        address
+        distance
+        category
+        price
+        image {
+            data {
+              attributes {
+                formats
+              }
+            }
+          }
+      }
+    }
+  }
+}
 `
 
 export const GET_RESTAURANTS = gql`
@@ -41,9 +107,22 @@ export const GET_RESTAURANTS = gql`
       data {
         id
         attributes {
-          title
+          name
           description
           url
+          address
+          distance
+          category
+          price
+          image {
+            data {
+              id
+              attributes {
+                formats
+                url
+              }
+            }
+          }
         }
       }
     }
@@ -56,9 +135,21 @@ export const DELETE_RESTAURANT = gql`
       data {
         id
         attributes {
-          title
+          name
           description
           url
+          address
+          distance
+          category
+          price
+          image {
+            data {
+              id
+              attributes {
+                formats
+              }
+            }
+          }
         }
       }
     }
@@ -71,9 +162,22 @@ export const GET_RESTAURANT_BY_ID = gql`
       data {
         id
         attributes {
-          title
+          name
           description
           url
+          address
+          distance
+          category
+          price
+          image {
+            data {
+              id
+              attributes {
+                formats
+                url
+              }
+            }
+          }
         }
       }
     }

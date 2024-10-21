@@ -22,7 +22,7 @@ const EditRestaurant = ({ params }: { params: { slug: string } }) => {
 
   return (
     <div>
-      <p>{`title: ${restaurantToView.data.restaurant.data.attributes.title}`}</p>
+      <p>{`name: ${restaurantToView.data.restaurant.data.attributes.name}`}</p>
       <p>{`description: ${restaurantToView.data.restaurant.data.attributes.description}`}</p>
       <p>{`url: ${restaurantToView.data.restaurant.data.attributes.url}`}</p>
       <ModalButton
