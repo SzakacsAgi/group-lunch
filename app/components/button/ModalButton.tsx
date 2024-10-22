@@ -16,7 +16,6 @@ interface ModalButtonProps {
   submitText?: string
   cancelText?: string
   onSubmit?: () => void
-  handleOnClose?: ((toDelete: boolean) => void) | ((toDelete: boolean) => Promise<void>)
 }
 
 const ModalButton: FunctionComponent<ModalButtonProps> = ({
@@ -28,6 +27,7 @@ const ModalButton: FunctionComponent<ModalButtonProps> = ({
   modalContent,
   buttonPurpose,
   onSubmit,
+  handleOnClose,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { deleteFile } = useFileOperations()
@@ -66,7 +66,7 @@ const ModalButton: FunctionComponent<ModalButtonProps> = ({
       <Button onPress={onOpen} color='primary'>
         {buttonText}
       </Button>
-      <Modal isOpen={isOpen} onClose={handleClose} hideCloseButton onOpenChange={() => onClose()}>
+      <Modal backdrop='blur' isOpen={isOpen} onClose={handleClose} hideCloseButton onOpenChange={() => onClose()}>
         <ModalContent>
           <ModalHeader>{modalHeaderText}</ModalHeader>
           <ModalBody>{detectContent()}</ModalBody>
