@@ -27,7 +27,6 @@ const ModalButton: FunctionComponent<ModalButtonProps> = ({
   modalContent,
   buttonPurpose,
   onSubmit,
-  handleOnClose,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { deleteFile } = useFileOperations()
