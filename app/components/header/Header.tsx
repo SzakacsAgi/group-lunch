@@ -9,10 +9,7 @@ import { useUser } from '@auth0/nextjs-auth0/client'
 import EditAddForm from '../EditAddForm'
 import ModalButton from '../button/ModalButton'
 import { useRestaurantOperations } from '../../api/useRestaurantOperations'
-import { RestaurantData, SupportedModalButtonTypes } from '../../../interface'
-import { useFileOperations } from '../../api/useFileOperations'
-import { useRecoilState } from 'recoil'
-import { uploadedImageTrash } from '../../../utils/atoms'
+import { SupportedModalButtonTypes } from '../../../interface'
 
 export const menuItems = [
   { label: 'Home', href: '/' },
@@ -23,25 +20,6 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const user = useUser()
   const { sendCreateRestaurantRequest } = useRestaurantOperations()
-  const { deleteFile } = useFileOperations()
-
-  const [uploadedImageId, setUploadedImageId] = useRecoilState(uploadedImageTrash)
-
-  const deleteUploadedFileOnClose = async () => {
-    try {
-      if (uploadedImageId) {
-        await deleteFile(uploadedImageId)
-      }
-      setUploadedImageId(null)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const handleOnSubmit = async (data: RestaurantData, restId: string, imageId?: string) => {
-    await sendCreateRestaurantRequest(data, restId, imageId)
-    setUploadedImageId(null)
-  }
 
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen} className='static shadow-md'>
@@ -64,9 +42,8 @@ const Header = () => {
           <ModalButton
             buttonPurpose={SupportedModalButtonTypes.CREATE_RESTAURANT}
             buttonText='Create'
-            modalContent={<EditAddForm onSubmit={handleOnSubmit} />}
+            modalContent={<EditAddForm onSubmit={sendCreateRestaurantRequest} />}
             modalHeaderText='Create new'
-            handleOnClose={deleteUploadedFileOnClose}
           />
         </NavbarItem>
       </NavbarContent>

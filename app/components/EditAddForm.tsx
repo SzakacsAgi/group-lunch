@@ -8,6 +8,8 @@ import { RestaurantEntity } from '../../gql/graphql'
 import Label from './Label'
 import Image from 'next/image'
 import { useFileOperations } from '../api/useFileOperations'
+import { useRecoilState } from 'recoil'
+import { uploadedImageTrash } from '../../utils/atoms'
 
 interface EditAddFormProps {
   restaurant?: RestaurantEntity
@@ -23,9 +25,10 @@ interface FileData {
 
 const EditAddForm: FunctionComponent<EditAddFormProps> = ({ restaurant, onSubmit, onClose }) => {
   const { uploadFile, deleteFile } = useFileOperations()
+  const [, setUploadedImageId] = useRecoilState(uploadedImageTrash)
 
   const [file, setFile] = useState<FileData>({
-    id: restaurant?.attributes?.image?.data?.id?.toString(),
+    id: undefined,
     url: restaurant?.attributes?.image?.data?.attributes?.formats?.small?.url
       ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${restaurant?.attributes?.image?.data?.attributes?.url}`
       : undefined,
@@ -48,11 +51,12 @@ const EditAddForm: FunctionComponent<EditAddFormProps> = ({ restaurant, onSubmit
     formState: { errors },
   } = useForm<RestaurantData>()
   const onFormSubmit: SubmitHandler<RestaurantData> = (data, e) => {
+    setUploadedImageId(null)
     e?.preventDefault()
     if (restaurant) {
       onSubmit(data, restaurant.id!, file.id)
     } else {
-      onSubmit(data, '')
+      onSubmit(data, '', file.id)
     }
     onClose && onClose()
   }

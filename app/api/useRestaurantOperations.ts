@@ -38,19 +38,20 @@ const useRestaurantOperations = () => {
             image: imageId,
           },
         })
+      } else {
+        await editRestaurant({
+          variables: {
+            id: restaurantId,
+            name: data.name,
+            url: data.url,
+            description: data.description,
+            address: data.address,
+            distance: Number.parseFloat(data.distance),
+            category: data.category,
+            price: data.price,
+          },
+        })
       }
-      await editRestaurant({
-        variables: {
-          id: restaurantId,
-          name: data.name,
-          url: data.url,
-          description: data.description,
-          address: data.address,
-          distance: Number.parseFloat(data.distance),
-          category: data.category,
-          price: data.price,
-        },
-      })
     } catch (error) {
       alert('Error')
       console.error(error)
@@ -72,18 +73,19 @@ const useRestaurantOperations = () => {
             image: imageId,
           },
         })
+      } else {
+        await addRestaurant({
+          variables: {
+            name: data.name,
+            url: data.url,
+            description: data.description,
+            address: data.address,
+            distance: Number.parseFloat(data.distance),
+            category: data.category,
+            price: data.price,
+          },
+        })
       }
-      await addRestaurant({
-        variables: {
-          name: data.name,
-          url: data.url,
-          description: data.description,
-          address: data.address,
-          distance: Number.parseFloat(data.distance),
-          category: data.category,
-          price: data.price,
-        },
-      })
     } catch (error) {
       alert('Error')
       console.error(error)
